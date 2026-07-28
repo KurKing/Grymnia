@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		FC20B1F230193A31005D1E75 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = FC20B1F130193A31005D1E75 /* KeychainAccess */; };
+		FC20B1F530193AA3005D1E75 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FC20B1F430193AA3005D1E75 /* RealmSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		FC20B1C030193694005D1E75 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -39,6 +44,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC20B1F530193AA3005D1E75 /* RealmSwift in Frameworks */,
+				FC20B1F230193A31005D1E75 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +97,8 @@
 			);
 			name = Grymnia;
 			packageProductDependencies = (
+				FC20B1F130193A31005D1E75 /* KeychainAccess */,
+				FC20B1F430193AA3005D1E75 /* RealmSwift */,
 			);
 			productName = Grymnia;
 			productReference = FC20B1B230193692005D1E75 /* Grymnia.app */;
@@ -146,6 +155,10 @@
 			);
 			mainGroup = FC20B1A930193692005D1E75;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				FC20B1F030193A31005D1E75 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				FC20B1F330193AA3005D1E75 /* XCRemoteSwiftPackageReference "realm-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FC20B1B330193692005D1E75 /* Products */;
 			projectDirPath = "";
@@ -474,6 +487,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FC20B1F030193A31005D1E75 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		FC20B1F330193AA3005D1E75 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				branch = community;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FC20B1F130193A31005D1E75 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FC20B1F030193A31005D1E75 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+		FC20B1F430193AA3005D1E75 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FC20B1F330193AA3005D1E75 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FC20B1AA30193692005D1E75 /* Project object */;
 }
