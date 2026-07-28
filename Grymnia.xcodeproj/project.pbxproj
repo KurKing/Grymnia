@@ -9,32 +9,31 @@
 /* Begin PBXBuildFile section */
 		FC20B1F230193A31005D1E75 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = FC20B1F130193A31005D1E75 /* KeychainAccess */; };
 		FC20B1F530193AA3005D1E75 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FC20B1F430193AA3005D1E75 /* RealmSwift */; };
+		FC20B1F630193FB7005D1E75 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = FC20B1F430193AA3005D1E75 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		FC20B1C030193694005D1E75 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FC20B1AA30193692005D1E75 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = FC20B1B130193692005D1E75;
-			remoteInfo = Grymnia;
+/* Begin PBXCopyFilesBuildPhase section */
+		FC20B1F730193FB7005D1E75 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FC20B1F630193FB7005D1E75 /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXContainerItemProxy section */
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		FC20B1B230193692005D1E75 /* Grymnia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Grymnia.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		FC20B1BF30193694005D1E75 /* GrymniaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrymniaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		FC20B1B430193692005D1E75 /* Grymnia */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Grymnia;
-			sourceTree = "<group>";
-		};
-		FC20B1C230193694005D1E75 /* GrymniaTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = GrymniaTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -49,13 +48,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FC20B1BC30193694005D1E75 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -63,7 +55,6 @@
 			isa = PBXGroup;
 			children = (
 				FC20B1B430193692005D1E75 /* Grymnia */,
-				FC20B1C230193694005D1E75 /* GrymniaTests */,
 				FC20B1B330193692005D1E75 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -72,7 +63,6 @@
 			isa = PBXGroup;
 			children = (
 				FC20B1B230193692005D1E75 /* Grymnia.app */,
-				FC20B1BF30193694005D1E75 /* GrymniaTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -86,6 +76,7 @@
 			buildPhases = (
 				FC20B1AE30193692005D1E75 /* Sources */,
 				FC20B1AF30193692005D1E75 /* Frameworks */,
+				FC20B1F730193FB7005D1E75 /* Embed Frameworks */,
 				FC20B1B030193692005D1E75 /* Resources */,
 			);
 			buildRules = (
@@ -104,29 +95,6 @@
 			productReference = FC20B1B230193692005D1E75 /* Grymnia.app */;
 			productType = "com.apple.product-type.application";
 		};
-		FC20B1BE30193694005D1E75 /* GrymniaTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = FC20B1D630193694005D1E75 /* Build configuration list for PBXNativeTarget "GrymniaTests" */;
-			buildPhases = (
-				FC20B1BB30193694005D1E75 /* Sources */,
-				FC20B1BC30193694005D1E75 /* Frameworks */,
-				FC20B1BD30193694005D1E75 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				FC20B1C130193694005D1E75 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				FC20B1C230193694005D1E75 /* GrymniaTests */,
-			);
-			name = GrymniaTests;
-			packageProductDependencies = (
-			);
-			productName = GrymniaTests;
-			productReference = FC20B1BF30193694005D1E75 /* GrymniaTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -139,10 +107,6 @@
 				TargetAttributes = {
 					FC20B1B130193692005D1E75 = {
 						CreatedOnToolsVersion = 26.4;
-					};
-					FC20B1BE30193694005D1E75 = {
-						CreatedOnToolsVersion = 26.4;
-						TestTargetID = FC20B1B130193692005D1E75;
 					};
 				};
 			};
@@ -165,20 +129,12 @@
 			projectRoot = "";
 			targets = (
 				FC20B1B130193692005D1E75 /* Grymnia */,
-				FC20B1BE30193694005D1E75 /* GrymniaTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		FC20B1B030193692005D1E75 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FC20B1BD30193694005D1E75 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -195,22 +151,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FC20B1BB30193694005D1E75 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		FC20B1C130193694005D1E75 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = FC20B1B130193692005D1E75 /* Grymnia */;
-			targetProxy = FC20B1C030193694005D1E75 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		FC20B1D130193694005D1E75 /* Debug */ = {
@@ -412,50 +353,6 @@
 			};
 			name = Release;
 		};
-		FC20B1D730193694005D1E75 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CUJ73BXL42;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kurking.GrymniaTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Grymnia.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Grymnia";
-			};
-			name = Debug;
-		};
-		FC20B1D830193694005D1E75 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CUJ73BXL42;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kurking.GrymniaTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Grymnia.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Grymnia";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -473,15 +370,6 @@
 			buildConfigurations = (
 				FC20B1D430193694005D1E75 /* Debug */,
 				FC20B1D530193694005D1E75 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		FC20B1D630193694005D1E75 /* Build configuration list for PBXNativeTarget "GrymniaTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FC20B1D730193694005D1E75 /* Debug */,
-				FC20B1D830193694005D1E75 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
