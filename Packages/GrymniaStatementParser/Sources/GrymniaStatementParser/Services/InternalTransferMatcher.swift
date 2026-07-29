@@ -1,7 +1,7 @@
 import Foundation
 
-enum InternalTransferMatcher {
-    static func matches(in transactions: [NormalizedTransaction]) -> [TransferMatch] {
+public enum InternalTransferMatcher {
+    public static func matches(in transactions: [NormalizedTransaction]) -> [TransferMatch] {
         var result: [TransferMatch] = []
         let candidates = transactions.filter { $0.type == .expense || $0.type == .income }
 

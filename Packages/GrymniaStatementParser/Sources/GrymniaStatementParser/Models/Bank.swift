@@ -1,12 +1,12 @@
 import Foundation
 
-enum Bank: String, CaseIterable, Identifiable, Codable {
+public enum Bank: String, CaseIterable, Identifiable, Codable, Sendable {
     case monobank
     case creditAgricole
 
-    var id: String { rawValue }
+    public var id: String { rawValue }
 
-    var displayName: String {
+    public var displayName: String {
         switch self {
         case .monobank:
             "Monobank"

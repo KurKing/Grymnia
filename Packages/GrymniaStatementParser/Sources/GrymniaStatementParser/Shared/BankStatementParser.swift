@@ -1,17 +1,17 @@
 import Foundation
 import PDFKit
 
-protocol BankStatementParser {
+public protocol BankStatementParser {
     func canParse(_ text: String) -> Bool
     func parse(_ pdf: PDFDocument) throws -> StatementImport
 }
 
-enum ParserError: LocalizedError {
+public enum ParserError: LocalizedError {
     case noText
     case unsupportedStatement
     case noTransactions(bank: Bank)
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .noText:
             "PDF has no extractable text."

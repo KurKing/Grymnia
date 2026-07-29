@@ -1,4 +1,5 @@
 import SwiftUI
+import GrymniaStatementParser
 import UIKit
 
 enum GrymniaDesign {
@@ -69,7 +70,7 @@ extension TransactionCategory {
         case .transfers: "💸"
         case .fees: "🧾"
         case .income: "💼"
-        case .other: "🪙"
+        case .other: "◻️"
         }
     }
 

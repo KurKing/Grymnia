@@ -1,6 +1,6 @@
 import Foundation
 
-enum TransactionCategory: String, CaseIterable, Identifiable, Codable {
+public enum TransactionCategory: String, CaseIterable, Identifiable, Codable, Sendable {
     case groceries
     case restaurants
     case fastFood
@@ -18,9 +18,9 @@ enum TransactionCategory: String, CaseIterable, Identifiable, Codable {
     case income
     case other
 
-    var id: String { rawValue }
+    public var id: String { rawValue }
 
-    var title: String {
+    public var title: String {
         switch self {
         case .groceries: "Groceries"
         case .restaurants: "Restaurants"

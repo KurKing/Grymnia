@@ -1,4 +1,5 @@
 import Charts
+import GrymniaStatementParser
 import SwiftUI
 
 struct AnalyticsView: View {
@@ -25,7 +26,7 @@ struct AnalyticsView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("🪙 Grymnia")
+            Text("Grymnia")
                 .font(.system(.largeTitle, design: .rounded).weight(.bold))
             Text("Your money. Your data.")
                 .font(.system(.body, design: .rounded))
@@ -37,9 +38,7 @@ struct AnalyticsView: View {
 
     private var summaryGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
-            StatCard(emoji: "🪙", title: "Balance", value: balance.currencyText, tint: GrymniaDesign.primary)
             StatCard(emoji: "📊", title: "Spending", value: currentMonthSpend.currencyText, tint: GrymniaDesign.expense)
-            StatCard(emoji: "🔥", title: "Biggest category", value: biggestCategoryText, tint: GrymniaDesign.warning)
             StatCard(emoji: "📈", title: "Monthly trend", value: trendText, tint: GrymniaDesign.accent)
         }
     }
@@ -84,17 +83,8 @@ struct AnalyticsView: View {
         .grymniaCard()
     }
 
-    private var balance: Decimal {
-        store.transactions.map(\.amount).reduce(0, +)
-    }
-
     private var currentMonthSpend: Decimal {
         abs(store.transactions.currentMonthExpenseTotal)
-    }
-
-    private var biggestCategoryText: String {
-        guard let top = categoryTotals.first else { return "None" }
-        return top.category.displayTitle
     }
 
     private var trendText: String {

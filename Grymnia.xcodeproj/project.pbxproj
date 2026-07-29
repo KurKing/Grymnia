@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FC20B1F830194800005D1E75 /* GrymniaStatementParser in Frameworks */ = {isa = PBXBuildFile; productRef = FC20B1FA30194800005D1E75 /* GrymniaStatementParser */; };
 		FC20B1F230193A31005D1E75 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = FC20B1F130193A31005D1E75 /* KeychainAccess */; };
 		FC20B1F530193AA3005D1E75 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FC20B1F430193AA3005D1E75 /* RealmSwift */; };
 		FC20B1F630193FB7005D1E75 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = FC20B1F430193AA3005D1E75 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -43,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC20B1F830194800005D1E75 /* GrymniaStatementParser in Frameworks */,
 				FC20B1F530193AA3005D1E75 /* RealmSwift in Frameworks */,
 				FC20B1F230193A31005D1E75 /* KeychainAccess in Frameworks */,
 			);
@@ -88,6 +90,7 @@
 			);
 			name = Grymnia;
 			packageProductDependencies = (
+				FC20B1FA30194800005D1E75 /* GrymniaStatementParser */,
 				FC20B1F130193A31005D1E75 /* KeychainAccess */,
 				FC20B1F430193AA3005D1E75 /* RealmSwift */,
 			);
@@ -120,6 +123,7 @@
 			mainGroup = FC20B1A930193692005D1E75;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				FC20B1F930194800005D1E75 /* XCLocalSwiftPackageReference "Packages/GrymniaStatementParser" */,
 				FC20B1F030193A31005D1E75 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				FC20B1F330193AA3005D1E75 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
@@ -376,6 +380,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		FC20B1F930194800005D1E75 /* XCLocalSwiftPackageReference "Packages/GrymniaStatementParser" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/GrymniaStatementParser;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		FC20B1F030193A31005D1E75 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -396,6 +407,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		FC20B1FA30194800005D1E75 /* GrymniaStatementParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FC20B1F930194800005D1E75 /* XCLocalSwiftPackageReference "Packages/GrymniaStatementParser" */;
+			productName = GrymniaStatementParser;
+		};
 		FC20B1F130193A31005D1E75 /* KeychainAccess */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FC20B1F030193A31005D1E75 /* XCRemoteSwiftPackageReference "KeychainAccess" */;

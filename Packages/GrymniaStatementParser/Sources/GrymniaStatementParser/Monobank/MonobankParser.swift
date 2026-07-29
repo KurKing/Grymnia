@@ -1,25 +1,28 @@
 import Foundation
 import PDFKit
 
-struct MonobankParser: BankStatementParser {
-    func canParse(_ text: String) -> Bool {
-        let key = text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current).uppercased()
-        let monobankBrand = key.contains("MONOBANK")
-            || key.contains("МОНОБАНК")
-            || key.contains("БІЛОЇ КАРТКИ")
-        let universalBankCardStatement = key.contains("УНІВЕРСАЛ БАНК")
-            && key.contains("РУХ КОШТІВ ПО КАРТЦІ")
-            && key.contains("ДЕТАЛІ ОПЕРАЦІЇ")
-            && key.contains("MCC")
-            && key.contains("ЗАЛИШОК")
+public struct MonobankParser: BankStatementParser {
+    public init() {}
+
+    public func canParse(_ text: String) -> Bool {
+        let latinKey = text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current).uppercased()
+        let ukrainianKey = text.uppercased()
+        let monobankBrand = latinKey.contains("MONOBANK")
+            || ukrainianKey.contains("МОНОБАНК")
+            || ukrainianKey.contains("БІЛОЇ КАРТКИ")
+        let universalBankCardStatement = ukrainianKey.contains("УНІВЕРСАЛ БАНК")
+            && ukrainianKey.contains("РУХ КОШТІВ ПО КАРТЦІ")
+            && ukrainianKey.contains("ДЕТАЛІ ОПЕРАЦІЇ")
+            && ukrainianKey.contains("MCC")
+            && ukrainianKey.contains("ЗАЛИШОК")
         return monobankBrand || universalBankCardStatement
     }
 
-    func parse(_ pdf: PDFDocument) throws -> StatementImport {
+    public func parse(_ pdf: PDFDocument) throws -> StatementImport {
         try parse(text: visualText(from: pdf))
     }
 
-    func parse(text: String) throws -> StatementImport {
+    public func parse(text: String) throws -> StatementImport {
         let accountID = "monobank-uah"
         let accountAlias = "Monobank • UAH"
         let cardSuffix = firstCardSuffix(in: text)
@@ -58,6 +61,8 @@ struct MonobankParser: BankStatementParser {
         var cashback: Decimal?
         var balanceAfter: Decimal?
     }
+
+    private let amountPattern = #"[+-]?\s*\d[\d\s]*(?:[,.]\d{2})?"#
 
     private func parseBlocks(
         _ text: String,
@@ -249,7 +254,6 @@ struct MonobankParser: BankStatementParser {
             searchText = text
         }
 
-        let amountPattern = #"[+-]?\s*\d[\d\s]*(?:[,.]\d{2})"#
         let pattern = #"(?<operationAmount>"# + amountPattern + #")\s+(?<currency>UAH|USD|EUR|грн)\s+(?<rate>—|"# + amountPattern + #")\s+(?<fee>"# + amountPattern + #")\s+(?<cashback>"# + amountPattern + #")\s+(?<balance>"# + amountPattern + #")"#
         guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
             return []
@@ -354,7 +358,6 @@ struct MonobankParser: BankStatementParser {
     }
 
     private func decimals(in text: String) -> [Decimal] {
-        let amountPattern = #"[+-]?\s*\d[\d\s]*(?:[,.]\d{2})"#
         guard let regex = try? NSRegularExpression(pattern: amountPattern) else {
             return []
         }
@@ -405,7 +408,6 @@ struct MonobankParser: BankStatementParser {
             .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
-        let amountPattern = #"[+-]?\s*\d[\d\s]*(?:[,.]\d{2})"#
         let pattern = #"^(?<date>\d{2}\.\d{2}\.\d{4})(?:\s+(?<time>\d{2}:\d{2}(?::\d{2})?))?\s+(?<merchant>.*?)\s+(?<mcc>\d{3,4})\s+(?<amount>"# + amountPattern + #")\s+(?<originalAmount>"# + amountPattern + #")\s+(?<currency>UAH|USD|EUR|грн)\s+(?<rate>—|"# + amountPattern + #")\s+(?<fee>"# + amountPattern + #")\s+(?<cashback>"# + amountPattern + #")\s+(?<balance>"# + amountPattern + #")(?<tail>.*)$"#
 
         guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]),
@@ -459,7 +461,7 @@ struct MonobankParser: BankStatementParser {
         let compact = line.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
         guard compact.range(of: #"\d{2}\.\d{2}\.\d{4}"#, options: .regularExpression) != nil else { return nil }
 
-        let pattern = #"(?<date>\d{2}\.\d{2}\.\d{4}(?:\s+\d{2}:\d{2}(?::\d{2})?)?)\s+(?<merchant>.*?)(?:\s+\[(?<mcc>\d{3,4})\])?.*?(?<amount>[+-]\s*\d[\d\s]*(?:[,.]\d{2}))\s*(?<currency>UAH|USD|EUR|грн)"#
+        let pattern = #"(?<date>\d{2}\.\d{2}\.\d{4}(?:\s+\d{2}:\d{2}(?::\d{2})?)?)\s+(?<merchant>.*?)(?:\s+\[(?<mcc>\d{3,4})\])?.*?(?<amount>[+-]\s*\d[\d\s]*(?:[,.]\d{2})?)\s*(?<currency>UAH|USD|EUR|грн)"#
         guard let match = match(pattern, in: compact),
               let date = ParsingHelpers.date(match["date"] ?? ""),
               let amount = ParsingHelpers.decimal(from: match["amount"] ?? "") else {

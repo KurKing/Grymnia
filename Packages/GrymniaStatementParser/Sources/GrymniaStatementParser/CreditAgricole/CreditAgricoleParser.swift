@@ -1,8 +1,10 @@
 import Foundation
 import PDFKit
 
-struct CreditAgricoleParser: BankStatementParser {
-    func canParse(_ text: String) -> Bool {
+public struct CreditAgricoleParser: BankStatementParser {
+    public init() {}
+
+    public func canParse(_ text: String) -> Bool {
         let key = text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current).uppercased()
         return key.contains("CREDIT AGRICOLE")
             || key.contains("CRÉDIT AGRICOLE")
@@ -10,11 +12,11 @@ struct CreditAgricoleParser: BankStatementParser {
             || (key.contains("[5411]") && key.contains("SILPO"))
     }
 
-    func parse(_ pdf: PDFDocument) throws -> StatementImport {
+    public func parse(_ pdf: PDFDocument) throws -> StatementImport {
         try parse(text: PDFTextExtractor.text(from: pdf))
     }
 
-    func parse(text: String) throws -> StatementImport {
+    public func parse(text: String) throws -> StatementImport {
         let accountID = "credit-agricole-uah"
         let accountAlias = "Credit Agricole • UAH"
         let cardSuffixes = cardSuffixesByIndex(in: text)
@@ -49,6 +51,8 @@ struct CreditAgricoleParser: BankStatementParser {
         var accountAmount: Decimal?
         var operationCurrency: String
     }
+
+    private let amountPattern = #"[+-]?\s*\d[\d\s]*(?:[,.]\d{2})?"#
 
     private func parseBlocks(
         _ text: String,
@@ -190,7 +194,8 @@ struct CreditAgricoleParser: BankStatementParser {
     }
 
     private func amount(in line: String) -> StatementAmount? {
-        guard let groups = captureGroups(#"\b(UAH|USD|EUR)\s+([+-]?\d[\d\s]*(?:[,.]\d{2}))(?:\s+([+-]?\d[\d\s]*(?:[,.]\d{2})))?\b"#, in: line),
+        let pattern = #"\b(UAH|USD|EUR)\s+("# + amountPattern + #")(?:\s+("# + amountPattern + #"))?\b"#
+        guard let groups = captureGroups(pattern, in: line),
               groups.count > 1,
               let operationAmount = ParsingHelpers.decimal(from: groups[1]) else {
             return nil
@@ -263,7 +268,7 @@ struct CreditAgricoleParser: BankStatementParser {
         let compact = line.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
         guard compact.contains("[") else { return nil }
 
-        let pattern = #"(?<operation>\d{2}\.\d{2}\.\d{4})(?:\s+(?<posting>\d{2}\.\d{2}\.\d{4}))?.*?\[(?<mcc>\d{3,4})\],?\s*(?<merchant>.*?)(?:\s{2,}|;|\|).*(?<amount>[+-]?\s*\d[\d\s]*(?:[,.]\d{2}))\s*(?<currency>UAH|USD|EUR|грн)?"#
+        let pattern = #"(?<operation>\d{2}\.\d{2}\.\d{4})(?:\s+(?<posting>\d{2}\.\d{2}\.\d{4}))?.*?\[(?<mcc>\d{3,4})\],?\s*(?<merchant>.*?)(?:\s{2,}|;|\|).*(?<amount>"# + amountPattern + #")\s*(?<currency>UAH|USD|EUR|грн)?"#
         guard let match = match(pattern, in: compact),
               let operationDate = ParsingHelpers.date(match["operation"] ?? ""),
               let amount = ParsingHelpers.decimal(from: match["amount"] ?? "") else {

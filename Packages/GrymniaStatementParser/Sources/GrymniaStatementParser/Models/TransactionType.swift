@@ -1,6 +1,6 @@
 import Foundation
 
-enum TransactionType: String, CaseIterable, Codable {
+public enum TransactionType: String, CaseIterable, Codable, Sendable {
     case expense
     case income
     case internalTransfer
@@ -8,7 +8,7 @@ enum TransactionType: String, CaseIterable, Codable {
     case hold
     case refund
 
-    var title: String {
+    public var title: String {
         switch self {
         case .expense: "Expense"
         case .income: "Income"
@@ -20,7 +20,7 @@ enum TransactionType: String, CaseIterable, Codable {
     }
 }
 
-enum TransactionStatus: String, CaseIterable, Codable {
+public enum TransactionStatus: String, CaseIterable, Codable, Sendable {
     case booked
     case pending
 }
