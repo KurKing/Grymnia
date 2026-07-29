@@ -15,6 +15,7 @@ struct AnalyticsView: View {
             }
             .padding(20)
         }
+        .scrollBounceBehavior(.basedOnSize)
         .background(GrymniaDesign.background)
         .navigationTitle("July")
         .toolbar {
@@ -51,17 +52,8 @@ struct AnalyticsView: View {
             if categoryTotals.isEmpty {
                 EmptyState(emoji: "📥", title: "Import your first statement.", message: "PDFs stay on this iPhone.")
             } else {
-                Chart(Array(categoryTotals.prefix(8).enumerated()), id: \.element.id) { index, item in
-                    BarMark(
-                        x: .value("Amount", item.amount.doubleValue),
-                        y: .value("Category", item.category.displayTitle)
-                    )
-                    .foregroundStyle(GrymniaDesign.categoryPastels[index % GrymniaDesign.categoryPastels.count])
-                    .cornerRadius(8)
-                }
-                .chartXAxis(.hidden)
-                .frame(height: max(220, CGFloat(min(categoryTotals.count, 8)) * 38))
-                .animation(.spring(response: 0.45, dampingFraction: 0.85), value: categoryTotals.map(\.amount.doubleValue))
+                CategoryBreakdownChart(items: Array(categoryTotals.prefix(8)), total: categorySpendTotal)
+                    .animation(.spring(response: 0.45, dampingFraction: 0.85), value: categoryTotals.map(\.amount.doubleValue))
             }
         }
         .grymniaCard()
@@ -73,7 +65,7 @@ struct AnalyticsView: View {
                 .font(.system(.title2, design: .rounded).weight(.semibold))
 
             if recentExpenses.isEmpty {
-                EmptyState(emoji: "🪙", title: "No transactions yet.", message: "Import a PDF statement to begin.")
+                EmptyState(emoji: "₴", title: "No transactions yet.", message: "Import a PDF statement to begin.")
             } else {
                 ForEach(recentExpenses) { transaction in
                     TransactionRow(transaction: transaction)
@@ -101,6 +93,10 @@ struct AnalyticsView: View {
             .sorted { $0.amount > $1.amount }
     }
 
+    private var categorySpendTotal: Decimal {
+        categoryTotals.map(\.amount).reduce(0, +)
+    }
+
     private var merchantTotals: [MerchantTotal] {
         Dictionary(grouping: store.transactions.realExpenses, by: \.merchant)
             .map { MerchantTotal(merchant: $0.key, amount: abs($0.value.map(\.amount).reduce(0, +))) }
@@ -118,6 +114,89 @@ struct MerchantTotal: Identifiable {
     var id: String { merchant }
     var merchant: String
     var amount: Decimal
+}
+
+private struct CategoryBreakdownChart: View {
+    let items: [CategoryTotal]
+    let total: Decimal
+
+    var body: some View {
+        VStack(spacing: 18) {
+            ZStack {
+                Chart(Array(items.enumerated()), id: \.element.id) { index, item in
+                    SectorMark(
+                        angle: .value("Amount", item.amount.doubleValue),
+                        innerRadius: .ratio(0.62),
+                        angularInset: 2
+                    )
+                    .cornerRadius(6)
+                    .foregroundStyle(color(for: index))
+                }
+                .chartLegend(.hidden)
+                .frame(height: 240)
+                .accessibilityLabel("Spending by category")
+
+                VStack(spacing: 4) {
+                    Text("Total")
+                        .font(.system(.caption, design: .rounded).weight(.medium))
+                        .foregroundStyle(GrymniaDesign.secondaryText)
+                    Text(total.currencyText)
+                        .font(.system(.title3, design: .rounded).monospacedDigit().weight(.semibold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.68)
+                }
+                .frame(width: 130)
+            }
+
+            VStack(spacing: 10) {
+                ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
+                    CategoryBreakdownRow(
+                        item: item,
+                        percentage: percentage(for: item),
+                        color: color(for: index)
+                    )
+                }
+            }
+        }
+    }
+
+    private func percentage(for item: CategoryTotal) -> Int {
+        guard total > 0 else { return 0 }
+        return Int((item.amount.doubleValue / total.doubleValue * 100).rounded())
+    }
+
+    private func color(for index: Int) -> Color {
+        GrymniaDesign.categoryPastels[index % GrymniaDesign.categoryPastels.count]
+    }
+}
+
+private struct CategoryBreakdownRow: View {
+    let item: CategoryTotal
+    let percentage: Int
+    let color: Color
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Circle()
+                .fill(color)
+                .frame(width: 12, height: 12)
+
+            Text(item.category.displayTitle)
+                .font(.system(.subheadline, design: .rounded).weight(.medium))
+                .lineLimit(1)
+
+            Spacer(minLength: 12)
+
+            VStack(alignment: .trailing, spacing: 2) {
+                Text(item.amount.currencyText)
+                    .font(.system(.subheadline, design: .rounded).monospacedDigit().weight(.semibold))
+                Text("\(percentage)%")
+                    .font(.system(.caption, design: .rounded).monospacedDigit().weight(.medium))
+                    .foregroundStyle(GrymniaDesign.secondaryText)
+            }
+        }
+        .padding(.vertical, 2)
+    }
 }
 
 private struct StatCard: View {

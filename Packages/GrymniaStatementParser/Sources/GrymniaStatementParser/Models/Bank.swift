@@ -3,6 +3,7 @@ import Foundation
 public enum Bank: String, CaseIterable, Identifiable, Codable, Sendable {
     case monobank
     case creditAgricole
+    case cash
 
     public var id: String { rawValue }
 
@@ -12,6 +13,8 @@ public enum Bank: String, CaseIterable, Identifiable, Codable, Sendable {
             "Monobank"
         case .creditAgricole:
             "Credit Agricole"
+        case .cash:
+            "Cash"
         }
     }
 }

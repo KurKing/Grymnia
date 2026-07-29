@@ -93,6 +93,43 @@ final class GrymniaStore: ObservableObject {
         }
     }
 
+    func saveManualCashExpense(amount: Decimal, date: Date, merchant: String, category: TransactionCategory) {
+        let id = UUID().uuidString
+        let trimmedMerchant = merchant.trimmingCharacters(in: .whitespacesAndNewlines)
+        let transaction = NormalizedTransaction(
+            id: id,
+            bank: .cash,
+            accountID: "cash:UAH",
+            accountAlias: "Cash",
+            cardSuffix: nil,
+            operationDate: date,
+            postingDate: nil,
+            merchant: trimmedMerchant,
+            rawDescription: trimmedMerchant,
+            mcc: nil,
+            amount: -amount,
+            currency: "UAH",
+            originalAmount: nil,
+            originalCurrency: nil,
+            exchangeRate: nil,
+            cashback: nil,
+            fee: nil,
+            balanceAfter: nil,
+            type: .expense,
+            status: .booked,
+            category: category,
+            importFingerprint: "manual-cash:\(id)"
+        )
+
+        do {
+            try storage.saveManualCashExpense(transaction)
+            transactions = try storage.transactions()
+            alertMessage = "Saved cash expense."
+        } catch {
+            alertMessage = error.localizedDescription
+        }
+    }
+
     func cancelPendingImport() {
         pendingImport = nil
     }

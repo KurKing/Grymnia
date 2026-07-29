@@ -5,43 +5,54 @@ struct ImportPreviewView: View {
     @EnvironmentObject private var store: GrymniaStore
 
     var body: some View {
-        ScrollView {
-            if let pendingImport = store.pendingImport {
-                VStack(alignment: .leading, spacing: 18) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("✨ \(pendingImport.transactions.count) transactions found")
-                            .font(.system(.title2, design: .rounded).weight(.semibold))
-                        Text("\(pendingImport.bank.displayName) • \(pendingImport.accountAlias)")
-                            .font(.system(.subheadline, design: .rounded))
-                            .foregroundStyle(GrymniaDesign.secondaryText)
+        GeometryReader { geometry in
+            ScrollView {
+                if let pendingImport = store.pendingImport {
+                    VStack(alignment: .leading, spacing: 18) {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("✨ \(pendingImport.transactions.count) transactions found")
+                                .font(.system(.title2, design: .rounded).weight(.semibold))
+                            Text("\(pendingImport.bank.displayName) • \(pendingImport.accountAlias)")
+                                .font(.system(.subheadline, design: .rounded))
+                                .foregroundStyle(GrymniaDesign.secondaryText)
 
-                        HStack(spacing: 10) {
-                            ImportStep(emoji: "📥", title: "Choose PDF", isActive: false)
-                            ImportStep(emoji: "🔍", title: "Parsed", isActive: false)
-                            ImportStep(emoji: "✅", title: "Review", isActive: true)
+                            HStack(spacing: 10) {
+                                ImportStep(emoji: "📥", title: "Choose PDF", isActive: false)
+                                ImportStep(emoji: "🔍", title: "Parsed", isActive: false)
+                                ImportStep(emoji: "✅", title: "Review", isActive: true)
+                            }
                         }
-                    }
-                    .grymniaCard()
+                        .grymniaCard()
 
-                    VStack(alignment: .leading, spacing: 10) {
-                        InfoRow(emoji: "🏦", title: "Bank", value: pendingImport.bank.displayName)
-                        InfoRow(emoji: "💳", title: "Account", value: pendingImport.accountAlias)
-                        InfoRow(emoji: "📊", title: "Total spend", value: pendingImport.transactions.expenseTotal.currencyText)
-                    }
-                    .grymniaCard()
-
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("📝 Preview")
-                            .font(.system(.title3, design: .rounded).weight(.semibold))
-
-                        ForEach(pendingImport.transactions.prefix(40)) { transaction in
-                            TransactionRow(transaction: transaction)
+                        VStack(alignment: .leading, spacing: 10) {
+                            InfoRow(emoji: "🏦", title: "Bank", value: pendingImport.bank.displayName)
+                            InfoRow(emoji: "💳", title: "Account", value: pendingImport.accountAlias)
+                            InfoRow(emoji: "📊", title: "Total spend", value: pendingImport.transactions.expenseTotal.currencyText)
                         }
+                        .grymniaCard()
+
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("📝 Preview")
+                                .font(.system(.title3, design: .rounded).weight(.semibold))
+
+                            ForEach(pendingImport.transactions.prefix(40)) { transaction in
+                                TransactionRow(transaction: transaction)
+                            }
+                        }
+                        .grymniaCard()
                     }
-                    .grymniaCard()
+                    .padding(20)
+                } else {
+                    VStack(spacing: 18) {
+                        EmptyState(emoji: "📥", title: "No import selected.", message: "Choose a PDF statement to preview transactions.")
+                        ImportButton()
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(minHeight: geometry.size.height, alignment: .center)
+                    .padding(20)
                 }
-                .padding(20)
             }
+            .scrollBounceBehavior(.basedOnSize)
         }
         .background(GrymniaDesign.background)
         .navigationTitle("Import")

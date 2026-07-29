@@ -11,8 +11,9 @@ struct SettingsView: View {
                         .font(.system(.subheadline, design: .rounded))
                         .foregroundStyle(GrymniaDesign.secondaryText)
 
-                ImportButton()
+                    ImportButton()
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .grymniaCard()
 
                 VStack(alignment: .leading, spacing: 14) {
@@ -22,6 +23,7 @@ struct SettingsView: View {
                     SettingsRow(emoji: "🔑", text: "Realm data is encrypted with a Keychain key.")
                     SettingsRow(emoji: "📵", text: "No bank login, cloud sync, or backend.")
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .grymniaCard()
 
                 VStack(alignment: .leading, spacing: 14) {
@@ -30,10 +32,12 @@ struct SettingsView: View {
                     SettingsRow(emoji: "🐱", text: "Monobank")
                     SettingsRow(emoji: "🌾", text: "Credit Agricole")
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .grymniaCard()
             }
             .padding(20)
         }
+        .scrollBounceBehavior(.basedOnSize)
         .background(GrymniaDesign.background)
         .navigationTitle("Settings")
     }

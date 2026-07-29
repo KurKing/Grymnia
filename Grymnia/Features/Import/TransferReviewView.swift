@@ -55,6 +55,7 @@ struct TransferReviewView: View {
             }
             .padding(20)
         }
+        .scrollBounceBehavior(.basedOnSize)
         .background(GrymniaDesign.background)
         .navigationTitle("Review")
         .toolbar {

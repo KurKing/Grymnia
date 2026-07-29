@@ -103,6 +103,16 @@ extension AccountObject {
         currency = importSummary.transactions.first?.currency ?? "UAH"
         createdAt = Date()
     }
+
+    convenience init(manualCashTransaction transaction: NormalizedTransaction) {
+        self.init()
+        id = transaction.accountID
+        bankRaw = transaction.bank.rawValue
+        alias = transaction.accountAlias
+        cardSuffix = nil
+        currency = transaction.currency
+        createdAt = Date()
+    }
 }
 
 extension Decimal {

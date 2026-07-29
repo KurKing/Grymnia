@@ -2,70 +2,34 @@
 
 ## Communication
 
-Always use `caveman` skill in full mode for this project unless the user explicitly says `normal mode` or `stop caveman`.
+Use `caveman` skill in full mode for this project unless user says `normal mode` or `stop caveman`.
 
-## Product
+## Product Guardrails
 
 Grymnia is a privacy-first native iOS expense tracker for Ukrainian bank PDF statements.
-
-MVP banks:
-- Monobank
-- Credit Agricole
 
 Core promise:
 - Import PDF statements.
 - Parse transactions locally.
-- Store data locally in encrypted storage.
+- Store data locally in encrypted Realm.
 - Never require bank login, Open Banking, Plaid, cloud sync, account registration, backend access, or external processing of financial data.
 
-## Stack
+MVP banks: Monobank and Credit Agricole.
 
-- SwiftUI
-- MVVM
-- NavigationStack with path-based navigation
-- PDFKit for statement text extraction
-- Realm Swift with AES-256 encryption
-- KeychainAccess for the 64-byte Realm encryption key
-- LocalAuthentication for optional app lock
-- Charts for analytics
-- Swift Concurrency for import/parsing work
+## Current Architecture
 
-## Architecture
+- Native SwiftUI app with feature folders under `Grymnia/Features`.
+- Parser logic lives in local Swift package `Packages/GrymniaStatementParser`.
+- Parser output uses `StatementImport` and `NormalizedTransaction`.
+- Storage uses Realm Swift encryption with a KeychainAccess-managed 64-byte key.
+- App-level navigation uses `NavigationStack(path:)` and `AppRoute`.
 
-Prefer feature-oriented folders:
+Respect MVVM boundaries:
+- Views: layout and user interaction.
+- Store/ViewModel layer: state, task orchestration, navigation triggers.
+- Services/package code: PDF extraction, parsing, storage, categorization, fingerprinting, transfer matching.
 
-```text
-Grymnia/
-  App/
-  Core/
-    Models/
-    Storage/
-    Security/
-    Navigation/
-  Features/
-    Import/
-    Transactions/
-    Analytics/
-    Settings/
-  Parsers/
-    Shared/
-    Monobank/
-    CreditAgricole/
-```
-
-Use MVVM boundaries:
-- `View`: layout and user interaction only.
-- `ViewModel`: screen state, validation, task orchestration, navigation intents.
-- `Service`: PDF extraction, parsing, storage, categorization, fingerprinting.
-- `Model`: domain data and persistence mapping.
-
-Navigation:
-- Use `NavigationStack(path: $router.path)`.
-- Use `enum AppRoute: Hashable`.
-- Inject shared router/app navigation through environment.
-- Avoid scattered `NavigationLink(destination:)` for app-level flows.
-
-Parser contract:
+## Parser Contract
 
 ```swift
 protocol BankStatementParser {
@@ -74,19 +38,13 @@ protocol BankStatementParser {
 }
 ```
 
-Keep parser output normalized through one internal model. Keep bank quirks inside parser modules.
+Keep bank quirks inside parser modules. Normalize through shared models before app/storage use.
 
-## Privacy
+Do not simplify duplicate detection without checking `TransactionFingerprint.make(...)` and parser tests. Fingerprint currently includes bank, account, operation/posting dates, normalized merchant/raw description, amount/currency, original amount/currency, card suffix, and occurrence index.
 
-Store only:
-- transactions
-- merchant
-- category
-- amount
-- account alias
-- bank
-- card suffix
-- import fingerprint
+## Privacy Rules
+
+Store only data needed for transaction list, analytics, account aliases, categories, dedupe, and transfer matching.
 
 Do not store:
 - full card number
@@ -96,58 +54,27 @@ Do not store:
 - original PDF statement
 - unrelated personal data
 
-Use Realm encryption with the KeychainAccess-managed 64-byte key. Do not write an ad hoc Security framework wrapper.
+Keep Realm encryption through `RealmEncryptionKeyProvider`. Do not replace it with ad hoc Security framework code.
 
 ## Domain Rules
 
-Transaction fields should support:
-- id
-- bank
-- accountID
-- cardSuffix
-- operationDate
-- postingDate
-- merchant
-- rawDescription
-- MCC
-- amount
-- currency
-- originalAmount
-- originalCurrency
-- exchangeRate
-- cashback
-- fee
-- balanceAfter
-- type
-
-Duplicate fingerprint:
-
-```text
-SHA256(bank + accountID + operationDate + normalizedMerchant + amount + currency)
-```
-
-Merge matching outgoing/incoming transfers across accounts or banks into one `Internal Transfer`.
-
-Prefer MCC categories. Fallback to merchant normalization:
-- `SILPO`, `SILPO MARKET`, `SILPO #123` -> `Silpo`
-- `EPITCENTR`, `SHOP EPITSENTR` -> `Epicentr`
+- Prefer MCC categories.
+- Fallback to merchant normalization for known merchants like Silpo, Epicentr, McDonald's, OKKO, WOG, AZK.
+- Mark high-confidence internal transfer matches automatically; route ambiguous matches to review.
+- Preserve transaction fields already represented by `NormalizedTransaction` unless migration is intentional.
 
 ## Product Feel
 
-Feel: minimal, premium, privacy-focused, native Apple ecosystem, Liquid Glass-inspired where platform APIs support it.
+Minimal, premium, privacy-focused, native Apple ecosystem. Use translucent materials, soft depth, restrained highlights, and crisp financial content.
 
-Avoid generic fintech styling. Use translucent materials, soft depth, restrained highlights, and crisp financial content. Readability of amounts, dates, merchants, charts, and import errors wins over visual polish.
+Readability of amounts, dates, merchants, charts, and import errors wins over visual polish. Avoid generic fintech styling.
 
-Useful taglines:
+Useful copy:
 - Your money. Your data.
 - Private expense tracking.
 - No bank login required.
 - Import. Track. Done.
 - Your finances stay on your iPhone.
-
-App Store naming direction:
-- `Grymnia - Private Expense Tracker`
-- `Grymnia - Offline Budget`
 
 ## Testing
 

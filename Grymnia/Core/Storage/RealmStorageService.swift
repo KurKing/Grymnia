@@ -45,6 +45,18 @@ final class RealmStorageService {
         return savedImport
     }
 
+    func saveManualCashExpense(_ transaction: NormalizedTransaction) throws {
+        let realm = try realm()
+
+        try realm.write {
+            if realm.object(ofType: AccountObject.self, forPrimaryKey: transaction.accountID) == nil {
+                realm.add(AccountObject(manualCashTransaction: transaction), update: .modified)
+            }
+
+            realm.add(TransactionObject(transaction: transaction), update: .modified)
+        }
+    }
+
     func markInternalTransfers(_ matches: [TransferMatch]) throws {
         let realm = try realm()
         let ids = Set(matches.flatMap { [$0.outgoingID, $0.incomingID] })
